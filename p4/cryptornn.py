@@ -34,7 +34,8 @@ for ratio in ratios:  # begin iteration
     else:  # otherwise, join this data to the main one
         main_df = main_df.join(df)
 
-main_df.fillna(method="ffill", inplace=True)  # if there are gaps in data, use previously known values
-main_df.dropna(inplace=True)
-print(main_df.head())  # how did we do??
+main_df['future'] = main_df[f'{RATIO_TO_PREDICT}_close'].shift(-FUTURE_PERIOD_PREDICT)
+main_df['target'] = list(map(classify, main_df[f'{RATIO_TO_PREDICT}_close'], main_df['future']))
+
+print(main_df.head(10))  # how did we do??
 
